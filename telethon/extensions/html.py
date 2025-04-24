@@ -43,6 +43,10 @@ class HTMLToTelegramParser(HTMLParser):
             EntityType = MessageEntityStrike
         elif tag == 'blockquote':
             EntityType = MessageEntityBlockquote
+            args['collapsed'] = False
+        elif tag == 'blockexp':
+            EntityType = MessageEntityBlockquote
+            args['collapsed'] = True
         elif tag == 'code':
             try:
                 # If we're in the middle of a <pre> tag, this <code> tag is
@@ -135,6 +139,7 @@ ENTITY_TO_FORMATTER = {
     MessageEntityUnderline: ('<u>', '</u>'),
     MessageEntityStrike: ('<del>', '</del>'),
     MessageEntityBlockquote: ('<blockquote>', '</blockquote>'),
+    MessageEntityBlockquote: lambda e, _: ('<blockexp>', '</blockexp>', e.collapsed),
     MessageEntityPre: lambda e, _: (
         "<pre>\n"
         "    <code class='language-{}'>\n"
